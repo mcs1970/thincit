@@ -22,10 +22,6 @@
         "publicIpId": {
             "value": "[variables('publicIpId')]",
             "type": "string"
-        },
-        "fqdn": {
-            "value": "[reference(variables('publicIpId'),'2016-06-01').fqdn]",
-            "type": "string"
         }
     }
 }
