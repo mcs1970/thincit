@@ -11,6 +11,9 @@
 		"loadBalancerName": {
             "type": "string"
         },
+		"loadBalancerIntName": {
+            "type": "string"
+        },
         "numberOfInstances": {
             "type": "int"
         }
