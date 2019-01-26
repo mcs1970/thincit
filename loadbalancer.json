@@ -11,7 +11,7 @@
 	"loadBalancerIntName": {
             "type": "string"
         },
-	"loadBalancersku": {
+	"loadBalancerSku": {
             "type": "string"
         },
         "numberOfInstances": {
@@ -49,6 +49,11 @@
                 "backendAddressPools": [
                     {
                         "name": "[variables('lbBackendName')]"
+                    }
+                ],
+		 "sku": [
+                    {
+                        "name": "[parameters('loadBalancerSku')]"
                     }
                 ],
                 "loadBalancingRules": [
