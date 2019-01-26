@@ -8,7 +8,7 @@
         "loadBalancerName": {
             "type": "string"
         },
-		"loadBalancerIntName": {
+	"loadBalancerIntName": {
             "type": "string"
         },
         "numberOfInstances": {
