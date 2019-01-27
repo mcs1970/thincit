@@ -35,12 +35,8 @@
             "name": "[parameters('loadBalancerName')]",
             "type": "Microsoft.Network/loadBalancers",
             "location": "[resourceGroup().location]",
+	    "sku": { "name": "[parameters('loadBalancerSku')]"},
             "properties": {
-		"sku": [
-		    {
-		        "name":  "[parameters('loadBalancerSku')]"
-		    }
-		],
                 "frontendIPConfigurations": [
                     {
                         "name": "[variables('lbFrontendName')]",
