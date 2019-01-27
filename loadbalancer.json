@@ -36,6 +36,7 @@
             "type": "Microsoft.Network/loadBalancers",
             "location": "[resourceGroup().location]",
             "properties": {
+		"sku": "[parameters('loadBalancerSku')]",
                 "frontendIPConfigurations": [
                     {
                         "name": "[variables('lbFrontendName')]",
@@ -49,11 +50,6 @@
                 "backendAddressPools": [
                     {
                         "name": "[variables('lbBackendName')]"
-                    }
-                ],
-		 "sku": [
-                    {
-                        "name": "[parameters('loadBalancerSku')]"
                     }
                 ],
                 "loadBalancingRules": [
