@@ -22,12 +22,14 @@
         "lbFrontendName": "[parameters('loadBalancerName')]",
         "lbBackendName": "[parameters('loadBalancerIntName')]",
         "inboundNatName": "Webadmin-XG",
+        "inboundNatSshName": "SSH-XG",
         "probeName": "Probe-Webadmin-On-4444",
         "lbID": "[resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancerName'))]",
         "lbFrontendID": "[concat(variables('lbID'),'/frontendIPConfigurations/',variables('lbFrontendName'))]",
         "lbBackendID": "[concat(variables('lbID'),'/backendAddressPools/',variables('lbBackendName'))]",
         "lbProbeID": "[concat(variables('lbID'),'/probes/',variables('probeName'))]",
-        "inboundNatIDPrefix": "[concat(variables('lbID'),'/inboundNatRules/',variables('inboundNatName'),'-')]"
+        "inboundNatIDPrefix": "[concat(variables('lbID'),'/inboundNatRules/',variables('inboundNatName'),'-')]",
+        "inboundNatSshIDPrefix": "[concat(variables('lbID'),'/inboundNatRules/',variables('inboundNatSshName'),'-')]"
     },
     "resources": [
         {
@@ -35,8 +37,8 @@
             "name": "[parameters('loadBalancerName')]",
             "type": "Microsoft.Network/loadBalancers",
             "location": "[resourceGroup().location]",
-	        "sku": { "name": "[parameters('loadBalancerSku')]"},
-            "properties": {
+			"sku": { "name": "[parameters('loadBalancerSku')]"},      
+			"properties": {
                 "frontendIPConfigurations": [
                     {
                         "name": "[variables('lbFrontendName')]",
@@ -108,6 +110,28 @@
                 "backendPort": 4444,
                 "enableFloatingIP": false
             }
+        },
+        {
+            "apiVersion": "2016-03-30",
+            "name": "[concat(parameters('loadBalancerName'), '/', variables('inboundNatSshName'), '-', copyIndex())]",
+            "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "inboundNatSshLoop",
+                "count": "[parameters('numberOfInstances')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))]"
+            ],
+            "properties": {
+                "frontendIPConfiguration": {
+                    "id": "[variables('lbFrontendID')]"
+                },
+                "protocol": "tcp",
+                "frontendPort": "[copyIndex(2222)]",
+                "backendPort": 22,
+                "enableFloatingIP": false
+            }
         }
     ],
     "outputs": {
@@ -125,6 +149,10 @@
         },
         "inboundNatIDPrefix": {
             "value": "[variables('inboundNatIDPrefix')]",
+            "type": "string"
+        },
+        "inboundNatSshIDPrefix": {
+            "value": "[variables('inboundNatSshIDPrefix')]",
             "type": "string"
         }
     }
