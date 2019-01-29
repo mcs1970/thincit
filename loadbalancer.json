@@ -8,10 +8,10 @@
         "loadBalancerName": {
             "type": "string"
         },
-	"loadBalancerIntName": {
+	    "loadBalancerIntName": {
             "type": "string"
         },
-	"loadBalancerSku": {
+	    "loadBalancerSku": {
             "type": "string"
         },
         "numberOfInstances": {
@@ -35,7 +35,7 @@
             "name": "[parameters('loadBalancerName')]",
             "type": "Microsoft.Network/loadBalancers",
             "location": "[resourceGroup().location]",
-	    "sku": { "name": "[parameters('loadBalancerSku')]"},
+	        "sku": { "name": "[parameters('loadBalancerSku')]"},
             "properties": {
                 "frontendIPConfigurations": [
                     {
