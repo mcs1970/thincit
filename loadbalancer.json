@@ -8,10 +8,10 @@
         "loadBalancerName": {
             "type": "string"
         },
-	    "loadBalancerIntName": {
+	"loadBalancerIntName": {
             "type": "string"
         },
-	    "loadBalancerSku": {
+	"loadBalancerSku": {
             "type": "string"
         },
         "numberOfInstances": {
