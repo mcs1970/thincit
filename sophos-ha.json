@@ -107,28 +107,28 @@
                 "description": "Prefix for the LAN side Subnet. Note that each node only requires a single address, so it's recommended to limit subnet size to /24 or smaller."
             }
         },
-		"LoadbalancerIntIP": {
+	"LoadbalancerIntIP": {
             "type": "string",
             "defaultValue": "10.101.162.94",
             "metadata": {
                 "description": "IP address for the internal Load Balancer."
             }
         },
-		"LoadbalancerIntName": {
+	"LoadbalancerIntName": {
             "type": "string",
             "defaultValue": "dmz-lan-lb",
             "metadata": {
                 "description": "Name for the internal Load Balancer."
             }
         },
-		"LoadbalancerName": {
+	"LoadbalancerName": {
             "type": "string",
             "defaultValue": "dmz-wan-lb",
             "metadata": {
                 "description": "Name for the public Load Balancer."
             }
         },
-		"LoadbalancerSku": {
+	"LoadbalancerSku": {
             "type": "string",
             "defaultValue": "Standard",
 			"allowedValues": [
@@ -150,7 +150,7 @@
                 "description": "Create new Public IP or use an existing one."
             }
         },
-		"publicIpAllocationMethod": {
+	"publicIpAllocationMethod": {
             "type": "string",
             "defaultValue": "Static",
             "allowedValues": [
@@ -160,8 +160,8 @@
             "metadata": {
                 "description": "Determines the Public IP allocation method."
             }
-		},
-		 "publicIpSku": {
+	},
+	"publicIpSku": {
             "type": "string",
             "defaultValue": "Standard",
             "allowedValues": [
@@ -246,7 +246,7 @@
                 "description": "Network Interface Name for LAN Zone"
             }
         },
-		"nicMgmt": {
+	"nicMgmt": {
             "type": "string",
             "defaultValue": "nic-mgmt",
             "metadata": {
