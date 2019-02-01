@@ -579,14 +579,13 @@
                 "count": "[parameters('numberOfInstances')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Resources/deployments/', 'SettingUpPublicIP')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpVirtualNetwork')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpNetworkSecurityGroup')]"
             ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('interfaceLBTemplate')]",
+                    "uri": "[variables('interfaceMgmtTemplate')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
