@@ -29,7 +29,7 @@
                             "privateIPAllocationMethod": "Dynamic",
                             "dnsSettings": {
 
-								"domainNameLabel": "[parameters('MgmtIPdnsPrefix')]"
+			"domainNameLabel": "[parameters('MgmtIPdnsPrefix')]"
                             }
                         }
                     }
