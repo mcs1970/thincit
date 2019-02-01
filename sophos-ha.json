@@ -25,6 +25,7 @@
         },
         "adminPassword": {
             "type": "securestring",
+			"defaultValue": "%#fF?e!G_u6=q2g?",
             "metadata": {
                 "description": "Password for the Virtual Machine."
             }
@@ -579,7 +580,6 @@
                 "count": "[parameters('numberOfInstances')]"
             },
             "dependsOn": [
-				"[concat('Microsoft.Resources/deployments/', 'SettingUpPublicIP')]"
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpVirtualNetwork')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpNetworkSecurityGroup')]"
             ],
@@ -593,11 +593,8 @@
                     "interfaceName": {
                         "value": "[concat(parameters('nicMgmt'),'-', copyIndex())]"
                     },
-                    "subnetRef": {
-                        "value": "[reference('SettingUpVirtualNetwork','2015-01-01').outputs.subnet1Ref.value]"
-                    },
-					"publicIpId": {
-                        "value": "[reference('SettingUpPublicIP').outputs.publicIpId.value]"
+					"mgmtIPdnsPrefix": {
+                        "value": "[concat(parameters('publicIpDNS'),'-',parameters('nicMgmt'),'-', copyIndex())]"
 					},
                     "networkSecurityGroupId": {
                         "value": "[reference('SettingUpNetworkSecurityGroup','2015-01-01').outputs.networkSecurityGroupName.value]"
