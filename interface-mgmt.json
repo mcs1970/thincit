@@ -32,7 +32,7 @@
                             "privateIPAllocationMethod": "Dynamic",
                             "dnsSettings": {
 								"domainNameLabel": "[parameters('MgmtIPdnsPrefix')]"
-                            }
+                            },
 							"subnet":  {
                                 "id": "[parameters('subnetRef')]"
                             }
