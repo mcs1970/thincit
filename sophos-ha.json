@@ -246,6 +246,13 @@
                 "description": "Network Interface Name for LAN Zone"
             }
         },
+		"nicMgmt": {
+            "type": "string",
+            "defaultValue": "nic-mgmt",
+            "metadata": {
+                "description": "Network Interface Name for Management in WAN Zone"
+            }
+        },
         "networkSecurityGroupNewOrExisting": {
             "type": "string",
             "defaultValue": "existing",
@@ -334,7 +341,7 @@
         "interfaceLanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lan.json')]",
         "interfaceLBTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lb.json')]",
 		"interfaceLBIntTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lbint.json')]",
-        "vmTemplate": "[concat(parameters('baseUrl'),'/shared/vm.json')]",
+        "vmTemplate": "[concat(parameters('THIncITbaseUrl'),'/vm.json')]",
         "LBTemplate": "[concat(parameters('THIncITbaseUrl'),'/loadbalancer.json')]",
 		"LBIntTemplate": "[concat(parameters('THIncITbaseUrl'),'/loadbalancerint.json')]",
         "securityRuleAllowHTTPTemplate": "[concat(parameters('baseUrl'),'/shared/inboundSecurityRuleAllowHttp.json')]",
@@ -562,6 +569,47 @@
                 }
             }
         },
+		{
+            "name": "[concat('SettingUpInterfaceMgmt', copyIndex())]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersion').resources.deployments]",
+            "copy": {
+                "name": "InterfaceMgmtLoop",
+                "count": "[parameters('numberOfInstances')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'SettingUpLoadbalancer')]",
+                "[concat('Microsoft.Resources/deployments/', 'SettingUpVirtualNetwork')]",
+                "[concat('Microsoft.Resources/deployments/', 'SettingUpNetworkSecurityGroup')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('interfaceLBTemplate')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "interfaceName": {
+                        "value": "[concat(parameters('nicMgmt'),'-', copyIndex())]"
+                    },
+                    "subnetRef": {
+                        "value": "[reference('SettingUpVirtualNetwork','2015-01-01').outputs.subnet1Ref.value]"
+                    },
+                    "lbBackendID": {
+                        "value": "[reference('SettingUpLoadbalancer').outputs.lbBackendID.value]"
+                    },
+                    "inboundNatID": {
+                        "value": "[concat(reference('SettingUpLoadbalancer').outputs.inboundNatIDPrefix.value, copyIndex())]"
+                    },
+                    "inboundNatSshID": {
+                        "value": "[concat(reference('SettingUpLoadbalancer').outputs.inboundNatSshIDPrefix.value, copyIndex())]"
+                    },
+                    "networkSecurityGroupId": {
+                        "value": "[reference('SettingUpNetworkSecurityGroup','2015-01-01').outputs.networkSecurityGroupName.value]"
+                    }
+                }
+            }
+        },
         {
             "name": "SettingUpIntLoadbalancer",
             "type": "Microsoft.Resources/deployments",
@@ -628,6 +676,7 @@
             },
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpInterfaceWan', copyIndex())]",
+				"[concat('Microsoft.Resources/deployments/', 'SettingUpInterfaceMgmt', copyIndex())]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpInterfaceLan', copyIndex())]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpStorageAccount')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpAvailabilitySet')]"
@@ -657,8 +706,11 @@
                     "storageAccountEndpoint": {
                         "value": "[reference('SettingUpStorageAccount').outputs.storageAccountEndpoint.value]"
                     },
-                    "interfaceRefWan": {
+					"interfaceRefWan": {
                         "value": "[reference(concat('SettingUpInterfaceWan', copyIndex()),'2015-01-01').outputs.interfaceRef.value]"
+                    },
+					"interfaceRefMgmt": {
+                        "value": "[reference(concat('SettingUpInterfaceMgmt', copyIndex()),'2015-01-01').outputs.interfaceRef.value]"
                     },
                     "interfaceRefLan": {
                         "value": "[reference(concat('SettingUpInterfaceLan', copyIndex()),'2015-01-01').outputs.interfaceRef.value]"
