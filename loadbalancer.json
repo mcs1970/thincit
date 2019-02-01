@@ -8,10 +8,10 @@
         "loadBalancerName": {
             "type": "string"
         },
-	"loadBalancerIntName": {
+	    "loadBalancerIntName": {
             "type": "string"
         },
-	"loadBalancerSku": {
+	    "loadBalancerSku": {
             "type": "string"
         },
         "numberOfInstances": {
@@ -19,7 +19,7 @@
         }
     },
     "variables": {
-        "lbFrontendName": "[parameters('loadBalancerName')]",
+         "lbFrontendName": "[parameters('loadBalancerName')]",
         "lbBackendName": "[parameters('loadBalancerIntName')]",
         "inboundNatName": "Webadmin-XG",
         "inboundNatSshName": "SSH-XG",
@@ -37,8 +37,8 @@
             "name": "[parameters('loadBalancerName')]",
             "type": "Microsoft.Network/loadBalancers",
             "location": "[resourceGroup().location]",
-	    "sku": { "name": "[parameters('loadBalancerSku')]"},      
-	    "properties": {
+			"sku": { "name": "[parameters('loadBalancerSku')]"},      
+			"properties": {
                 "frontendIPConfigurations": [
                     {
                         "name": "[variables('lbFrontendName')]",
@@ -74,7 +74,27 @@
                                 "id": "[variables('lbProbeID')]"
                             }
                         }
-                    }
+                    },
+					{
+                        "name": "HTTPS",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[variables('lbFrontendID')]"
+                            },
+                            "frontendPort": 443,
+                            "backendPort": 443,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "loadDistribution": "SourceIP",
+                            "backendAddressPool": {
+                                "id": "[variables('lbBackendID')]"
+                            },
+                            "probe": {
+                                "id": "[variables('lbProbeID')]"
+                            }
+                        }
+                    },
                 ],
                 "probes": [
                     {
@@ -157,3 +177,4 @@
         }
     }
 }
+
