@@ -39,6 +39,7 @@
                         "name": "ipconfig",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
+							"primary": "true",
                             "subnet": {
                                 "id": "[parameters('subnetRef')]"
                             },
