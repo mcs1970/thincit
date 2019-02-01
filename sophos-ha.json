@@ -593,6 +593,9 @@
                     "interfaceName": {
                         "value": "[concat(parameters('nicMgmt'),'-', copyIndex())]"
                     },
+					"subnetRef": {
+                        "value": "[reference('SettingUpVirtualNetwork','2015-01-01').outputs.subnet1Ref.value]"
+                    },
 					"mgmtIPdnsPrefix": {
                         "value": "[concat(parameters('publicIpDNS'),'-',parameters('nicMgmt'),'-', copyIndex())]"
 					},
