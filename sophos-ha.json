@@ -9,7 +9,7 @@
                 "artifactsBaseUrl": "Base URL of the template package"
             }
         },
-	"THIncITbaseUrl": {
+		"THIncITbaseUrl": {
             "type": "string",
             "defaultValue": "https://raw.githubusercontent.com/mcs1970/thincit/mcs1970-thincit-shared/",
             "metadata": {
@@ -107,28 +107,28 @@
                 "description": "Prefix for the LAN side Subnet. Note that each node only requires a single address, so it's recommended to limit subnet size to /24 or smaller."
             }
         },
-	"LoadbalancerIntIP": {
+		"LoadbalancerIntIP": {
             "type": "string",
             "defaultValue": "10.101.162.94",
             "metadata": {
                 "description": "IP address for the internal Load Balancer."
             }
         },
-	"LoadbalancerIntName": {
+		"LoadbalancerIntName": {
             "type": "string",
             "defaultValue": "dmz-lan-lb",
             "metadata": {
                 "description": "Name for the internal Load Balancer."
             }
         },
-	"LoadbalancerName": {
+		"LoadbalancerName": {
             "type": "string",
             "defaultValue": "dmz-wan-lb",
             "metadata": {
                 "description": "Name for the public Load Balancer."
             }
         },
-	"LoadbalancerSku": {
+		"LoadbalancerSku": {
             "type": "string",
             "defaultValue": "Standard",
 			"allowedValues": [
@@ -150,7 +150,7 @@
                 "description": "Create new Public IP or use an existing one."
             }
         },
-	"publicIpAllocationMethod": {
+		"publicIpAllocationMethod": {
             "type": "string",
             "defaultValue": "Static",
             "allowedValues": [
@@ -160,8 +160,8 @@
             "metadata": {
                 "description": "Determines the Public IP allocation method."
             }
-	},
-	"publicIpSku": {
+		},
+		 "publicIpSku": {
             "type": "string",
             "defaultValue": "Standard",
             "allowedValues": [
@@ -246,7 +246,7 @@
                 "description": "Network Interface Name for LAN Zone"
             }
         },
-	"nicMgmt": {
+		"nicMgmt": {
             "type": "string",
             "defaultValue": "nic-mgmt",
             "metadata": {
@@ -305,31 +305,31 @@
                 "description": "Number of XG Firewall instances to be deployed."
             }
         },
-	"automationAccountNewOrExisting": {
-		"type": "string",
-		"defaultValue": "new",
-		"allowedValues": [
-			"new",
-			"existing"
-		],
-		"metadata": {
-			"description": "Create a new Azure Automation account or select an existing account to use for XG automation. WARNING: Automation account names are unique, so reusing an account name when creating a new account will overwirte the existing account!."
+		"automationAccountNewOrExisting": {
+			"type": "string",
+			"defaultValue": "new",
+			"allowedValues": [
+				"new",
+				"existing"
+			],
+			"metadata": {
+				"description": "Create a new Azure Automation account or select an existing account to use for XG automation. WARNING: Automation account names are unique, so reusing an account name when creating a new account will overwirte the existing account!."
+			}
+		},
+		"automationAccountName": {
+			"type": "string",
+			"defaultValue": "AzAutomation",
+			"metadata": {
+				"description": "Enter the name of the Azure Automation account you wish to use / create. Note that when creating a new account the account name must be between 6 to 50 characters, and can contain only letters, numbers, and hyphens."
+			}
+		},
+		"automationAccountLocation": {
+			"type": "string",
+			"defaultValue": "EastUS2",
+			"metadata": {
+				"description": "Enter the location for the Azure Automation account you wish to use / create. Note that not all regions support Automation Accounts"
+			}
 		}
-	},
-	"automationAccountName": {
-		"type": "string",
-		"defaultValue": "AzAutomation",
-		"metadata": {
-			"description": "Enter the name of the Azure Automation account you wish to use / create. Note that when creating a new account the account name must be between 6 to 50 characters, and can contain only letters, numbers, and hyphens."
-		}
-	},
-	"automationAccountLocation": {
-		"type": "string",
-		"defaultValue": "EastUS2",
-		"metadata": {
-			"description": "Enter the location for the Azure Automation account you wish to use / create. Note that not all regions support Automation Accounts"
-		}
-	}
     },
     "variables": {
         "publicIpTemplate": "[concat(parameters('baseUrl'),'/shared/publicip-',parameters('publicIpNewOrExisting'),'.json')]",
@@ -338,6 +338,7 @@
         "availabilitySetTemplate": "[concat(parameters('baseUrl'),'/shared/availabilitySet-',parameters('availabilitySetNewOrExisting'),'.json')]",
         "networkSecurityGroupTemplate": "[concat(parameters('baseUrl'),'/shared/networkSecurityGroup-',parameters('networkSecurityGroupNewOrExisting'),'.json')]",
         "interfaceWanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-wan.json')]",
+		"interfaceMgmtTemplate": "[concat(parameters('THIncITbaseUrl'),'/interface-mgmt.json')]",
         "interfaceLanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lan.json')]",
         "interfaceLBTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lb.json')]",
 		"interfaceLBIntTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lbint.json')]",
@@ -350,9 +351,9 @@
                 "deployments": "2017-08-01"
             }
         },
-	"accountTemplate": "[concat(parameters('baseUrl'),'/shared/AAAccountTemplate-', parameters('automationAccountNewOrExisting'),'.json')]",
-	"lanNetwork": "[substring(parameters('lanPrefix'),0,sub(length(parameters('lanPrefix')), 4))]",
-	"wanNetwork": "[substring(parameters('wanPrefix'),0,sub(length(parameters('wanPrefix')), 4))]"
+		"accountTemplate": "[concat(parameters('baseUrl'),'/shared/AAAccountTemplate-', parameters('automationAccountNewOrExisting'),'.json')]",
+		"lanNetwork": "[substring(parameters('lanPrefix'),0,sub(length(parameters('lanPrefix')), 4))]",
+		"wanNetwork": "[substring(parameters('wanPrefix'),0,sub(length(parameters('wanPrefix')), 4))]"
     },
     "resources": [
         {
@@ -578,7 +579,7 @@
                 "count": "[parameters('numberOfInstances')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Resources/deployments/', 'SettingUpLoadbalancer')]",
+                "[concat('Microsoft.Resources/deployments/', 'SettingUpPublicIP')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpVirtualNetwork')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpNetworkSecurityGroup')]"
             ],
@@ -595,15 +596,9 @@
                     "subnetRef": {
                         "value": "[reference('SettingUpVirtualNetwork','2015-01-01').outputs.subnet1Ref.value]"
                     },
-                    "lbBackendID": {
-                        "value": "[reference('SettingUpLoadbalancer').outputs.lbBackendID.value]"
-                    },
-                    "inboundNatID": {
-                        "value": "[concat(reference('SettingUpLoadbalancer').outputs.inboundNatIDPrefix.value, copyIndex())]"
-                    },
-                    "inboundNatSshID": {
-                        "value": "[concat(reference('SettingUpLoadbalancer').outputs.inboundNatSshIDPrefix.value, copyIndex())]"
-                    },
+					"publicIpId": {
+                        "value": "[reference('SettingUpPublicIP').outputs.publicIpId.value]"
+					},
                     "networkSecurityGroupId": {
                         "value": "[reference('SettingUpNetworkSecurityGroup','2015-01-01').outputs.networkSecurityGroupName.value]"
                     }
