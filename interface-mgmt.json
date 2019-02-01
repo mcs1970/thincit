@@ -5,6 +5,9 @@
         "interfaceName": {
             "type": "string"
         },
+		"subnetRef": {
+            "type": "string"
+        },
         "mgmtIPdnsPrefix": {
             "type": "string"
         },
@@ -28,8 +31,10 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "dnsSettings": {
-
-			"domainNameLabel": "[parameters('MgmtIPdnsPrefix')]"
+								"domainNameLabel": "[parameters('MgmtIPdnsPrefix')]"
+                            }
+							"subnet": {
+                                "id": "[parameters('subnetRef')]"
                             }
                         }
                     }
