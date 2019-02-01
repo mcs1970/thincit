@@ -339,11 +339,10 @@
         "availabilitySetTemplate": "[concat(parameters('baseUrl'),'/shared/availabilitySet-',parameters('availabilitySetNewOrExisting'),'.json')]",
         "networkSecurityGroupTemplate": "[concat(parameters('baseUrl'),'/shared/networkSecurityGroup-',parameters('networkSecurityGroupNewOrExisting'),'.json')]",
         "interfaceWanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-wan.json')]",
-		"interfaceMgmtTemplate": "[concat(parameters('THIncITbaseUrl'),'/interface-mgmt.json')]",
         "interfaceLanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lan.json')]",
         "interfaceLBTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lb.json')]",
 		"interfaceLBIntTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lbint.json')]",
-        "vmTemplate": "[concat(parameters('THIncITbaseUrl'),'/vm.json')]",
+        "vmTemplate": "[concat(parameters('baseUrl'),'/shared/vm.json')]",
         "LBTemplate": "[concat(parameters('THIncITbaseUrl'),'/loadbalancer.json')]",
 		"LBIntTemplate": "[concat(parameters('THIncITbaseUrl'),'/loadbalancerint.json')]",
         "securityRuleAllowHTTPTemplate": "[concat(parameters('baseUrl'),'/shared/inboundSecurityRuleAllowHttp.json')]",
@@ -571,40 +570,6 @@
                 }
             }
         },
-		{
-            "name": "[concat('SettingUpInterfaceMgmt', copyIndex())]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersion').resources.deployments]",
-            "copy": {
-                "name": "InterfaceMgmtLoop",
-                "count": "[parameters('numberOfInstances')]"
-            },
-            "dependsOn": [
-                "[concat('Microsoft.Resources/deployments/', 'SettingUpVirtualNetwork')]",
-                "[concat('Microsoft.Resources/deployments/', 'SettingUpNetworkSecurityGroup')]"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('interfaceMgmtTemplate')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "interfaceName": {
-                        "value": "[concat(parameters('nicMgmt'),'-', copyIndex())]"
-                    },
-					"subnetRef": {
-                        "value": "[reference('SettingUpVirtualNetwork','2015-01-01').outputs.subnet1Ref.value]"
-                    },
-					"mgmtIPdnsPrefix": {
-                        "value": "[concat(parameters('publicIpDNS'),'-',parameters('nicMgmt'),'-', copyIndex())]"
-					},
-                    "networkSecurityGroupId": {
-                        "value": "[reference('SettingUpNetworkSecurityGroup','2015-01-01').outputs.networkSecurityGroupName.value]"
-                    }
-                }
-            }
-        },
         {
             "name": "SettingUpIntLoadbalancer",
             "type": "Microsoft.Resources/deployments",
@@ -671,7 +636,6 @@
             },
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpInterfaceWan', copyIndex())]",
-				"[concat('Microsoft.Resources/deployments/', 'SettingUpInterfaceMgmt', copyIndex())]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpInterfaceLan', copyIndex())]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpStorageAccount')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpAvailabilitySet')]"
@@ -703,9 +667,6 @@
                     },
 					"interfaceRefWan": {
                         "value": "[reference(concat('SettingUpInterfaceWan', copyIndex()),'2015-01-01').outputs.interfaceRef.value]"
-                    },
-					"interfaceRefMgmt": {
-                        "value": "[reference(concat('SettingUpInterfaceMgmt', copyIndex()),'2015-01-01').outputs.interfaceRef.value]"
                     },
                     "interfaceRefLan": {
                         "value": "[reference(concat('SettingUpInterfaceLan', copyIndex()),'2015-01-01').outputs.interfaceRef.value]"
