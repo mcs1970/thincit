@@ -25,9 +25,9 @@
         },
         "adminPassword": {
             "type": "securestring",
-			"defaultValue": "%#fF?e!G_u6=q2g?",
+			"defaultValue": "S0phosP@ssw0rd",
             "metadata": {
-                "description": "Password for the Virtual Machine."
+                "description": "Password for the Virtual Machine. Default is: S0phosP@ssw0rd"
             }
         },
         "imageSku": {
@@ -251,7 +251,7 @@
             "type": "string",
             "defaultValue": "nic-mgmt",
             "metadata": {
-                "description": "Network Interface Name for Management in WAN Zone"
+                "description": "IP Configuration Prefix for Management IP in WAN Zone"
             }
         },
         "networkSecurityGroupNewOrExisting": {
@@ -340,7 +340,7 @@
         "networkSecurityGroupTemplate": "[concat(parameters('baseUrl'),'/shared/networkSecurityGroup-',parameters('networkSecurityGroupNewOrExisting'),'.json')]",
         "interfaceWanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-wan.json')]",
         "interfaceLanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lan.json')]",
-        "interfaceLBTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lb.json')]",
+        "interfaceLBTemplate": "[concat(parameters('THIncITbaseUrl'),'/interface-lb.json')]",
 		"interfaceLBIntTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lbint.json')]",
         "vmTemplate": "[concat(parameters('baseUrl'),'/shared/vm.json')]",
         "LBTemplate": "[concat(parameters('THIncITbaseUrl'),'/loadbalancer.json')]",
@@ -552,7 +552,10 @@
                     "interfaceName": {
                         "value": "[concat(parameters('nicWan'),'-', copyIndex())]"
                     },
-                    "subnetRef": {
+					"interfaceMgmtName": {
+                        "value": "[concat(parameters('nicMgmt'),'-', copyIndex())]"
+                    },
+					"subnetRef": {
                         "value": "[reference('SettingUpVirtualNetwork','2015-01-01').outputs.subnet1Ref.value]"
                     },
                     "lbBackendID": {
