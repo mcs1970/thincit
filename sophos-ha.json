@@ -579,6 +579,7 @@
                 "count": "[parameters('numberOfInstances')]"
             },
             "dependsOn": [
+				"[concat('Microsoft.Resources/deployments/', 'SettingUpPublicIP')]"
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpVirtualNetwork')]",
                 "[concat('Microsoft.Resources/deployments/', 'SettingUpNetworkSecurityGroup')]"
             ],
