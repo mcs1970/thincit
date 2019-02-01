@@ -5,7 +5,7 @@
         "interfaceName": {
             "type": "string"
         },
-	"subnetRef": {
+		"subnetRef": {
             "type": "string"
         },
         "mgmtIPdnsPrefix": {
@@ -33,7 +33,7 @@
                             "dnsSettings": {
 								"domainNameLabel": "[parameters('MgmtIPdnsPrefix')]"
                             }
-			"subnet": {
+							"subnet":  {
                                 "id": "[parameters('subnetRef')]"
                             }
                         }
