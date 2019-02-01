@@ -9,7 +9,7 @@
                 "artifactsBaseUrl": "Base URL of the template package"
             }
         },
-		"THIncITbaseUrl": {
+	"THIncITbaseUrl": {
             "type": "string",
             "defaultValue": "https://raw.githubusercontent.com/mcs1970/thincit/mcs1970-thincit-shared/",
             "metadata": {
@@ -305,31 +305,31 @@
                 "description": "Number of XG Firewall instances to be deployed."
             }
         },
-		"automationAccountNewOrExisting": {
-			"type": "string",
-			"defaultValue": "new",
-			"allowedValues": [
-				"new",
-				"existing"
-			],
-			"metadata": {
-				"description": "Create a new Azure Automation account or select an existing account to use for XG automation. WARNING: Automation account names are unique, so reusing an account name when creating a new account will overwirte the existing account!."
-			}
-		},
-		"automationAccountName": {
-			"type": "string",
-			"defaultValue": "AzAutomation",
-			"metadata": {
-				"description": "Enter the name of the Azure Automation account you wish to use / create. Note that when creating a new account the account name must be between 6 to 50 characters, and can contain only letters, numbers, and hyphens."
-			}
-		},
-		"automationAccountLocation": {
-			"type": "string",
-			"defaultValue": "EastUS2",
-			"metadata": {
-				"description": "Enter the location for the Azure Automation account you wish to use / create. Note that not all regions support Automation Accounts"
-			}
+	"automationAccountNewOrExisting": {
+		"type": "string",
+		"defaultValue": "new",
+		"allowedValues": [
+			"new",
+			"existing"
+		],
+		"metadata": {
+			"description": "Create a new Azure Automation account or select an existing account to use for XG automation. WARNING: Automation account names are unique, so reusing an account name when creating a new account will overwirte the existing account!."
 		}
+	},
+	"automationAccountName": {
+		"type": "string",
+		"defaultValue": "AzAutomation",
+		"metadata": {
+			"description": "Enter the name of the Azure Automation account you wish to use / create. Note that when creating a new account the account name must be between 6 to 50 characters, and can contain only letters, numbers, and hyphens."
+		}
+	},
+	"automationAccountLocation": {
+		"type": "string",
+		"defaultValue": "EastUS2",
+		"metadata": {
+			"description": "Enter the location for the Azure Automation account you wish to use / create. Note that not all regions support Automation Accounts"
+		}
+	}
     },
     "variables": {
         "publicIpTemplate": "[concat(parameters('baseUrl'),'/shared/publicip-',parameters('publicIpNewOrExisting'),'.json')]",
@@ -350,9 +350,9 @@
                 "deployments": "2017-08-01"
             }
         },
-		"accountTemplate": "[concat(parameters('baseUrl'),'/shared/AAAccountTemplate-', parameters('automationAccountNewOrExisting'),'.json')]",
-		"lanNetwork": "[substring(parameters('lanPrefix'),0,sub(length(parameters('lanPrefix')), 4))]",
-		"wanNetwork": "[substring(parameters('wanPrefix'),0,sub(length(parameters('wanPrefix')), 4))]"
+	"accountTemplate": "[concat(parameters('baseUrl'),'/shared/AAAccountTemplate-', parameters('automationAccountNewOrExisting'),'.json')]",
+	"lanNetwork": "[substring(parameters('lanPrefix'),0,sub(length(parameters('lanPrefix')), 4))]",
+	"wanNetwork": "[substring(parameters('wanPrefix'),0,sub(length(parameters('wanPrefix')), 4))]"
     },
     "resources": [
         {
