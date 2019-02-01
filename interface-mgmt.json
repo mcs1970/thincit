@@ -5,10 +5,7 @@
         "interfaceName": {
             "type": "string"
         },
-        "subnetRef": {
-            "type": "string"
-        },
-        "publicIpId": {
+        "mgmtIPdnsPrefix": {
             "type": "string"
         },
         "networkSecurityGroupId": {
@@ -30,11 +27,9 @@
                         "name": "ipconfig",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[parameters('publicIpId')]"
-                            },
-                            "subnet": {
-                                "id": "[parameters('subnetRef')]"
+                            "dnsSettings": {
+
+								"domainNameLabel": "[parameters('MgmtIPdnsPrefix')]"
                             }
                         }
                     }
