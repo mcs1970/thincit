@@ -48,6 +48,18 @@
                 "description": "Size of the Virtual Machine."
             }
         },
+		"diskType": {
+			"type": "string",
+			"defaultValue": "StandardSSD_LRS",
+			"allowedValues": [
+			"StandardSSD_LRS",
+			"Standard_LRS",
+			"Premium_LRS"
+      ],
+      "metadata": {
+        "description": "The Storage type of the data Disks"
+      }
+    },
         "netNewOrExisting": {
             "type": "string",
             "defaultValue": "existing",
@@ -249,7 +261,7 @@
         },
 		"nicMgmt": {
             "type": "string",
-            "defaultValue": "nic-mgmt",
+            "defaultValue": "mgmt-ip",
             "metadata": {
                 "description": "IP Configuration Prefix for Management IP in WAN Zone"
             }
@@ -342,7 +354,7 @@
         "interfaceLanTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lan.json')]",
         "interfaceLBTemplate": "[concat(parameters('THIncITbaseUrl'),'/interface-lb.json')]",
 		"interfaceLBIntTemplate": "[concat(parameters('baseUrl'),'/shared/interface-lbint.json')]",
-        "vmTemplate": "[concat(parameters('baseUrl'),'/shared/vm.json')]",
+        "vmTemplate": "[concat(parameters('THIncITbaseUrl'),'/vm.json')]",
         "LBTemplate": "[concat(parameters('THIncITbaseUrl'),'/loadbalancer.json')]",
 		"LBIntTemplate": "[concat(parameters('THIncITbaseUrl'),'/loadbalancerint.json')]",
         "securityRuleAllowHTTPTemplate": "[concat(parameters('baseUrl'),'/shared/inboundSecurityRuleAllowHttp.json')]",
@@ -632,7 +644,7 @@
         {
             "name": "[concat('SettingUpVm', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersion').resources.deployments]",
+            "apiVersion": "2018-04-01",
             "copy": {
                 "name": "VmLoop",
                 "count": "[parameters('numberOfInstances')]"
@@ -655,6 +667,9 @@
                     },
                     "vmSize": {
                         "value": "[parameters('vmSize')]"
+                    },
+					"diskType": {
+                        "value": "[parameters('diskType')]"
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
