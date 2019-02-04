@@ -49,32 +49,6 @@
             }
        
 		},
-		"OsDiskType": {
-			"type": "string",
-			"defaultValue": "Standard_LRS",
-			"allowedValues": [
-			"Standard_LRS",
-			"StandardSSD_LRS",
-			"UltraSSD_LRS",
-			"Premium_LRS"
-				],
-				"metadata": {
-				"description": "The Storage type of the data Disks"
-      }
-    },
-		"DataDiskType": {
-			"type": "string",
-			"defaultValue": "Standard_LRS",
-			"allowedValues": [
-			"Standard_LRS",
-			"StandardSSD_LRS",
-			"UltraSSD_LRS",
-			"Premium_LRS"
-				],
-				"metadata": {
-				"description": "The Storage type of the data Disks"
-		}
-	  },
         "netNewOrExisting": {
             "type": "string",
             "defaultValue": "existing",
@@ -682,12 +656,6 @@
                     },
                     "vmSize": {
                         "value": "[parameters('vmSize')]"
-                    },
-					"osdiskType": {
-                        "value": "[parameters('osdiskType')]"
-                    },
-					"datadiskType": {
-                        "value": "[parameters('datadiskType')]"
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
