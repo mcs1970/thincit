@@ -90,6 +90,9 @@
                         "vhd": {
                             "uri": "[concat(parameters('storageAccountEndpoint'), variables('vhdContainer'),'/',parameters('vmName'),'-prim.vhd')]"
 								},
+						"managedDisk": {
+							"storageAccountType": "[parameters('osdiskType')]"
+											}
 
                     }
                 },
