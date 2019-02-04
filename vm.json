@@ -72,28 +72,15 @@
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(parameters('vmName'),'-dataDisk')]",
-                            "lun": 0,
-                            "createOption": "FromImage",
-                            "vhd": {
-                                "uri": "[concat(parameters('storageAccountEndpoint'), variables('vhdContainer'),'/',parameters('vmName'),'-aux.vhd')]"
-									},
-							"managedDisk": {
-								"storageAccountType": "[parameters('datadiskType')]"
-							}
+                        "name": "[concat(parameters('vmName'),'-dataDisk')]",
+                        "lun": 0,
+                        "createOption": "FromImage"
                         }
                     ],
                     "osDisk": {
                         "name": "[concat(parameters('vmName'),'-osDisk')]",
                         "caching": "ReadWrite",
-                        "createOption": "FromImage",
-                        "vhd": {
-                            "uri": "[concat(parameters('storageAccountEndpoint'), variables('vhdContainer'),'/',parameters('vmName'),'-prim.vhd')]"
-								},
-						"managedDisk": {
-							"storageAccountType": "[parameters('osdiskType')]"
-											}
-
+                        "createOption": "FromImage"
                     }
                 },
                 "networkProfile": {
