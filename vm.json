@@ -8,12 +8,6 @@
         "vmSize": {
             "type": "string"
         },
-		"osdiskType": {
-            "type": "string"
-        },
-		"datadiskType": {
-            "type": "string"
-        },
         "adminPassword": {
             "type": "string"
         },
