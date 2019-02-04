@@ -8,7 +8,10 @@
         "vmSize": {
             "type": "string"
         },
-		"diskType": {
+		"osdiskType": {
+            "type": "string"
+        },
+		"datadiskType": {
             "type": "string"
         },
         "adminPassword": {
@@ -76,7 +79,7 @@
                                 "uri": "[concat(parameters('storageAccountEndpoint'), variables('vhdContainer'),'/',parameters('vmName'),'-aux.vhd')]"
 									},
 							"managedDisk": {
-								"storageAccountType": "[parameters('diskType')]"
+								"storageAccountType": "[parameters('datadiskType')]"
 							}
                         }
                     ],
@@ -88,7 +91,7 @@
                             "uri": "[concat(parameters('storageAccountEndpoint'), variables('vhdContainer'),'/',parameters('vmName'),'-prim.vhd')]"
 								},
 							"managedDisk": {
-								"storageAccountType": "[parameters('diskType')]"
+								"storageAccountType": "[parameters('osdiskType')]"
 											}
                     }
                 },
