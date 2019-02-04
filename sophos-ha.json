@@ -48,16 +48,30 @@
                 "description": "Size of the Virtual Machine."
             }
         },
-		"diskType": {
+		"OsDiskType": {
 			"type": "string",
-			"defaultValue": "StandardSSD_LRS",
+			"defaultValue": "Standard_LRS",
 			"allowedValues": [
-			"StandardSSD_LRS",
 			"Standard_LRS",
+			"StandardSSD_LRS",
+			"UltraSSD_LRS",
 			"Premium_LRS"
-      ],
-      "metadata": {
-        "description": "The Storage type of the data Disks"
+		],
+			"metadata": {
+			"description": "The Storage type of the data Disks"
+      }
+    },
+		"DataDiskType": {
+			"type": "string",
+			"defaultValue": "Standard_LRS",
+			"allowedValues": [
+			"Standard_LRS",
+			"StandardSSD_LRS",
+			"UltraSSD_LRS",
+			"Premium_LRS"
+		],
+			"metadata": {
+			"description": "The Storage type of the data Disks"
       }
     },
         "netNewOrExisting": {
@@ -644,7 +658,7 @@
         {
             "name": "[concat('SettingUpVm', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-04-01",
+            "apiVersion": "2018-11-01",
             "copy": {
                 "name": "VmLoop",
                 "count": "[parameters('numberOfInstances')]"
@@ -668,7 +682,10 @@
                     "vmSize": {
                         "value": "[parameters('vmSize')]"
                     },
-					"diskType": {
+					"osdiskType": {
+                        "value": "[parameters('diskType')]"
+                    },
+					"datadiskType": {
                         "value": "[parameters('diskType')]"
                     },
                     "adminPassword": {
