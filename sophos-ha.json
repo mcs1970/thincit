@@ -683,10 +683,10 @@
                         "value": "[parameters('vmSize')]"
                     },
 					"osdiskType": {
-                        "value": "[parameters('diskType')]"
+                        "value": "[parameters('osdiskType')]"
                     },
 					"datadiskType": {
-                        "value": "[parameters('diskType')]"
+                        "value": "[parameters('datadiskType')]"
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
