@@ -15,12 +15,19 @@
             "metadata": {
                 "THIncITartifactsBaseUrl": "THIncIT Base URL of the template package"
             }
-        },
-        "vmName": {
+		},
+		"DeploymentPrefix": {
             "type": "string",
             "defaultValue": "fw",
             "metadata": {
-                "description": "Name for the Virtual Machine."
+                "description": "Prefix for the Deployment Resources"
+            }
+        },
+		"vmName": {
+            "type": "string",
+            "defaultValue": "fw",
+            "metadata": {
+                "description": "Prefix for the Virtual Machine Names."
             }
         },
         "adminPassword": {
@@ -236,14 +243,14 @@
         },
         "nicWan": {
             "type": "string",
-            "defaultValue": "nic-wan",
+            "defaultValue": "fw",
             "metadata": {
-                "description": "Network Interface Name for WAN Zone"
+                "description": "Prefix for Network Interface Name for WAN Zone"
             }
         },
         "nicLan": {
             "type": "string",
-            "defaultValue": "nic-lan",
+            "defaultValue": "fw",
             "metadata": {
                 "description": "Network Interface Name for LAN Zone"
             }
@@ -551,7 +558,7 @@
                 },
                 "parameters": {
                     "interfaceName": {
-                        "value": "[concat(parameters('nicWan'),'-', copyIndex())]"
+                        "value": "[concat('fw', copyIndex(), '-wan-nic')]"
                     },
 					"interfaceMgmtName": {
                         "value": "[concat(parameters('nicMgmt'),'-', copyIndex())]"
@@ -619,7 +626,7 @@
                 },
                 "parameters": {
                     "interfaceName": {
-                        "value": "[concat(parameters('nicLan'),'-', copyIndex())]"
+                        "value": "[concat('fw', copyIndex(), '-lan-nic')]"
                     },
                     "subnetRef": {
                         "value": "[reference('SettingUpVirtualNetwork','2015-01-01').outputs.subnet2Ref.value]"
@@ -652,7 +659,7 @@
                 },
                 "parameters": {
                     "vmName": {
-                        "value": "[concat(parameters('vmName'),'-', copyIndex())]"
+                        "value": "[concat('fw', copyIndex(), '-vm')]"
                     },
                     "vmSize": {
                         "value": "[parameters('vmSize')]"
