@@ -16,20 +16,6 @@
                 "THIncITartifactsBaseUrl": "THIncIT Base URL of the template package"
             }
 		},
-		"DeploymentPrefix": {
-            "type": "string",
-            "defaultValue": "fw",
-            "metadata": {
-                "description": "Prefix for the Deployment Resources"
-            }
-        },
-		"vmName": {
-            "type": "string",
-            "defaultValue": "fw",
-            "metadata": {
-                "description": "Prefix for the Virtual Machine Names."
-            }
-        },
         "adminPassword": {
             "type": "securestring",
 			"defaultValue": "S0phosP@ssw0rd",
@@ -239,20 +225,6 @@
             "defaultValue": "[resourceGroup().Location]",
             "metadata": {
                 "description": "Geo-Location you want to deploy to."
-            }
-        },
-        "nicWan": {
-            "type": "string",
-            "defaultValue": "fw",
-            "metadata": {
-                "description": "Prefix for Network Interface Name for WAN Zone"
-            }
-        },
-        "nicLan": {
-            "type": "string",
-            "defaultValue": "fw",
-            "metadata": {
-                "description": "Network Interface Name for LAN Zone"
             }
         },
 		"nicMgmt": {
