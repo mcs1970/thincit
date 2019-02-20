@@ -66,13 +66,13 @@
                     },
                     "dataDisks": [
                         {
-                        "name": "[concat(parameters('vmName'),'-dataDisk')]",
+                        "name": "[concat(parameters('vmName'),'_DataDisk1')]",
                         "lun": 0,
                         "createOption": "FromImage"
                         }
                     ],
                     "osDisk": {
-                        "name": "[concat(parameters('vmName'),'-osDisk')]",
+                        "name": "[concat(parameters('vmName'),'_OsDisk')]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     }
