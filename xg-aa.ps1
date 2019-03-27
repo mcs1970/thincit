@@ -11,9 +11,7 @@ Param
   [Parameter (Mandatory= $true)]
   [String] $sshport,
   [Parameter (Mandatory= $true)]
-  [String] $fw0alias,
-  [Parameter (Mandatory= $true)]
-  [String] $fw1alias
+  [String] $fwaliasip
 )
 $secpassword = ConvertTo-SecureString $password -AsPlainText -Force
 $creds = New-Object System.Management.Automation.PSCredential ("admin", $secpassword)
