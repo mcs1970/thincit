@@ -38,6 +38,8 @@ If ($session.Connected) {
     Start-Sleep -s 3
 	$SSHStream.WriteLine("ip route 168.63.129.16/32 $portbgw PortB")
     Start-Sleep -s 3
+	$SSHStream.WriteLine("set advanced-firewall sys-traffic-nat add destination 52.167.6.155 snat ip $fwaliasip")
+	Start-Sleep -s 5
 	$SSHStream.WriteLine("write")
     Start-Sleep -s 5
     $SSHStream.WriteLine("restart")
