@@ -28,10 +28,6 @@ If ($session.Connected) {
     Start-Sleep -s 5
     $SSHStream.WriteLine("3")
     Start-Sleep -s 5
-	$SSHStream.WriteLine("cish")
-	Start-Sleep -s 5
-	$SSHStream.WriteLine("set advanced-firewall sys-traffic-nat add destination 52.167.6.155 snat ip $fwaliasip")
-	Start-Sleep -s 5
     $SSHStream.WriteLine("telnet localhost zebra")
     Start-Sleep -s 5
     $SSHStream.WriteLine("enable")
