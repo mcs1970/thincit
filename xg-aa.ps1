@@ -40,8 +40,12 @@ If ($session.Connected) {
     Start-Sleep -s 3
 	$SSHStream.WriteLine("write")
     Start-Sleep -s 5
-    $SSHStream.WriteLine("reboot")
+    $SSHStream.WriteLine("exit")
     Start-Sleep -s 2
+	$SSHStream.WriteLine("exit")
+    Start-Sleep -s 5
+	$SSHStream.WriteLine("reboot")
+    Start-Sleep -s 5
     $SSHStream.Read()  
     Remove-SSHSession -SessionId $session.SessionId > $null
 }
