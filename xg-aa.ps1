@@ -11,7 +11,11 @@ Param
   [Parameter (Mandatory= $true)]
   [String] $sshport,
   [Parameter (Mandatory= $true)]
-  [String] $fwaliasip
+  [String] $fwaliasip,
+  [Parameter (Mandatory= $true)]
+  [String] $localas,
+  [Parameter (Mandatory= $true)]
+  [String] $remoteas
 )
 $secpassword = ConvertTo-SecureString $password -AsPlainText -Force
 $creds = New-Object System.Management.Automation.PSCredential ("admin", $secpassword)
@@ -35,6 +39,10 @@ If ($session.Connected) {
 	$SSHStream.WriteLine("configure terminal")
     Start-Sleep -s 5
     $SSHStream.WriteLine("ip route 168.63.129.16/32 $portagw PortA")
+    Start-Sleep -s 3
+    $SSHStream.WriteLine("ip route $localas $portagw PortA")
+    Start-Sleep -s 3
+    $SSHStream.WriteLine("ip route $remoteas $portagw PortA")
     Start-Sleep -s 3
 	$SSHStream.WriteLine("ip route 168.63.129.16/32 $portbgw PortB")
     Start-Sleep -s 3
