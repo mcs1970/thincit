@@ -13,9 +13,7 @@ Param
   [Parameter (Mandatory= $true)]
   [String] $fwaliasip,
   [Parameter (Mandatory= $true)]
-  [String] $localas,
-  [Parameter (Mandatory= $true)]
-  [String] $remoteas
+  [String] $localas
 )
 $secpassword = ConvertTo-SecureString $password -AsPlainText -Force
 $creds = New-Object System.Management.Automation.PSCredential ("admin", $secpassword)
@@ -41,8 +39,6 @@ If ($session.Connected) {
     $SSHStream.WriteLine("ip route 168.63.129.16/32 $portagw PortA")
     Start-Sleep -s 3
     $SSHStream.WriteLine("ip route $localas $portagw PortA")
-    Start-Sleep -s 3
-    $SSHStream.WriteLine("ip route $remoteas $portagw PortA")
     Start-Sleep -s 3
 	$SSHStream.WriteLine("ip route 168.63.129.16/32 $portbgw PortB")
     Start-Sleep -s 3
