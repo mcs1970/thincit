@@ -25,9 +25,9 @@ Please reach out to your sales or channel representative to learn more about the
 	
 	b. Select appropriate subnet class for deployment virtual network. (ClassA, ClassB, or ClassC)
 	
-		ClassA Address Space: 10.255.255.0/24 <br/>
-		ClassB Address Space: 172.16.31.0/24 <br/>
-		ClassC Address Space: 192.168.255.0/24 <br/>
+		ClassA Address Space: 10.255.255.0/24 
+		ClassB Address Space: 172.16.31.0/24 
+		ClassC Address Space: 192.168.255.0/24 
 	
 	
 	c. Enter existing virtual network name to create network peer with.
