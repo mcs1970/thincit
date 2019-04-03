@@ -1,5 +1,6 @@
 # SophosHAAzureTemplatev3
 Deployment template to deploy Sophos XG Active/Active firewall to Azure
+
 Developed by THIncIT
 
 Deploying
