@@ -38,14 +38,11 @@ Please reach out to your sales or channel representative to learn more about the
 	
 	f. Enter base deployment name. Base name is Harvest client ID and will be used as prefix for all resources created.
 	
-	g. Enter admin password to be used for Sophos firewalls and Azure automation account.
+	g. Enter admin password to be used for Sophos firewalls and Azure automation account. **must contain at least a lowercase letter, an uppercase letter, a number, and a special character.**
 	
 	h. Enter number of firewall instances to create. Currently this is locked to 2.
 
-	
 **If invalid parameters are passed, the deployment will fail.**
-
-Please note: The `adminPassword` has to be minimum 8 characters, **containing at least a lowercase letter, an uppercase letter, a number, and a special character.**
 
 3) Agree to the Terms and Conditions then click Purchase.
 
