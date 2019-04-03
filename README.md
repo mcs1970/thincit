@@ -50,7 +50,7 @@ Please reach out to your sales or channel representative to learn more about the
 
 6) Document deployment output values.
 
-		output 1: publicIPDNS
+		output 1:publicIPDNS
 		output 2:firewall-0-Management-URL
 		output 3:firewall-1-Management-URL
 		output 4:firewall-0-Alias-IP
