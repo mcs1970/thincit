@@ -1,5 +1,6 @@
 # SophosHAAzureTemplatev3
 Deployment template to deploy Sophos XG Active/Active firewall to Azure
+Developed by THIncIT
 
 Deploying
 =========
@@ -61,3 +62,5 @@ Useful Links
 ============
 
 * [Authoring Azure Resource Manager templates](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authoring-templates/)
+
+* [Sophos XG Firewall: How to implement a full HA (inbound/outbound) on Azure](https://community.sophos.com/kb/en-us/133755)
