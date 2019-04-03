@@ -48,7 +48,7 @@ Please reach out to your sales or channel representative to learn more about the
 
 5) In the **Microsoft.Template - Overview** blade click Outputs.
 
-6) Document deployment output values
+6) Document deployment output values.
 
 		publicIPDNS
 		firewall-0-Management-URL
@@ -57,7 +57,7 @@ Please reach out to your sales or channel representative to learn more about the
 		firewall-1-Alias-IP
 		
 
-Next Steps: Add alias IP's to firewalls, complete Network Peering setup on remote virtual network
+Next Steps: Add alias IP's to firewalls, complete Network Peering setup on remote virtual network.
 
 ***
 
