@@ -53,9 +53,9 @@ Please note: The `adminPassword` has to be minimum 8 characters, **containing at
 Connect to the VM instances
 ==========================
 
-[https://firewall-1-Management-URL:4444](https://firewall-1-Management-URL:4444)
+[https://firewall-0-Management-URL:4444](https://firewall-0-Management-URL:4444)
 
-[https://firewall-2-Management-URL:4444](https://firewall-2-Management-URL:4444)
+[https://firewall-1-Management-URL:4444](https://firewall-1-Management-URL:4444)
 
 ***
 
