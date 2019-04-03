@@ -67,16 +67,27 @@ Azure Resources Created
 =======================
 
 Availability Set - `clientID`-dmz-as
+
 Automation Account - `clientID`-azAutomation
+
 Storage Account - `clientID`dmzsa<unique string>
+
 DMZ Public IP Address - `clientID`-dmz-public-lb-fe-pip
+
 Management Public IP Addresses - `clientID`-fw0-mgmt-nic-pip, `clientID`-fw1-mgmt-nic-pip
+
 Virtual Network - `clientID`-dmz-vnet
+
 Network Security Group - `clientID`-dmz-nsg
+
 Standard Public Load Balancer - `clientID`-dmz-public-lb
+
 Standard Internal Load Balancer - `clientID`-dmz-private-lb
+
 Network Peering - `clientID`-dmz-vnet-TO-(existingvnet)
+
 Virtual Machines - `clientID`-fm0-vm, `clientID`-fw1-vm
+
 RunBooks - `clientID`-azAutomation/RunbookJob0, `clientID`-azAutomation/RunbookJob1
 
 ***
