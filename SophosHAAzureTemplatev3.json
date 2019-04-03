@@ -1,0 +1,740 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+       "SubnetClass": {
+            "type": "string",
+			"defaultValue": "ClassA",
+            "allowedValues": [
+                "ClassA",
+                "ClassB",
+                "ClassC"
+            ],
+            "metadata": {
+                "description": "Subnet class for Virtual Network"
+            }
+		},
+        "vNetToPeerWith": {
+            "type": "string",
+			"defaultValue": "",
+            "metadata": {
+                "description": "Name of existing VNet for Peering"
+            }
+		},
+        "RemoteVnetAddressSpace": {
+            "type": "string",
+			"defaultValue": "",
+            "metadata": {
+                "description": "Address space of remote vNet in CIDR format"
+            }
+		},
+        "RemoteVNetResourceGroupName": {
+            "type": "string",
+			"defaultValue": "",
+            "metadata": {
+                "description": "Name of Resource Group for existing VNet for Peering"
+            }
+		},
+        "BaseDeploymentName": {
+            "type": "string",
+			"defaultValue": "tcsc",
+            "metadata": {
+                "description": "Harvest code for client"
+            }
+		},
+		"adminPassword": {
+            "type": "securestring",
+			"defaultValue": "S0phosP@ssw0rd2019!",
+            "metadata": {
+                "description": "Password for AzAdmin and AzAutomation Account. Default is: S0phosP@ssw0rd2019!"
+            }
+        },
+        "InstanceCount": {
+            "type": "Int",
+			"defaultValue": 2,
+            "minValue": 2,
+            "maxValue": 2,
+            "metadata": {
+                "description": "How many firewall instances to deploy"
+            }
+        }
+    },
+    "variables": {
+
+        "apiVersion": {
+            "resources": {
+                "deployments": "2017-08-01"
+            }
+        },
+		"vmBaseName": "[concat(parameters('BaseDeploymentName'),'-fw')]",
+		"fw0mgmtDNS": "[concat(variables('vmBaseName'),'0-mgmt-nic-pip')]",
+		"fw1mgmtDNS": "[concat(variables('vmBaseName'),'1-mgmt-nic-pip')]",
+		"fw0aliasIP": "[concat(variables('vmBaseName'),'0-public-nic')]",
+		"fw1aliasIP": "[concat(variables('vmBaseName'),'1-public-nic')]",
+		"availabilitySetName": "[concat(parameters('BaseDeploymentName'),'-dmz-as')]",
+		"storageAccountName": "[concat(parameters('BaseDeploymentName'),'dmzsa', uniqueString(resourceGroup().id))]",
+		"storageAccountType": "Standard_LRS",
+		"trustedNetwork": "*",
+		"networkSecurityGroupName": "[concat(parameters('BaseDeploymentName'),'-dmz-nsg')]",
+		"nsgRule1Name": "[concat(parameters('BaseDeploymentName'),'-dmz-fw-webgui-rule')]",
+		"nsgRule2Name": "[concat(parameters('BaseDeploymentName'),'-dmz-fw-https-rule')]",
+		"nsgRule3Name": "[concat(parameters('BaseDeploymentName'),'-dmz-fw-ssh-rule')]",
+		"VirtualNetworkName": "[concat(parameters('BaseDeploymentName'),'-dmz-vnet')]",
+		"Subnet1Name": "[concat(parameters('BaseDeploymentName'),'-dmz-public-sn')]",
+		"Subnet2Name": "[concat(parameters('BaseDeploymentName'),'-dmz-private-sn')]",
+		"Subnet3Name": "[concat(parameters('BaseDeploymentName'),'-dmz-reserved-sn')]",
+		"Subnet4Name": "[concat(parameters('BaseDeploymentName'),'-dmz-gateway-sn')]",
+		"subnet1Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnet1Name'))]",
+		"subnet2Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnet2Name'))]",
+		"subnet3Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnet3Name'))]",
+		"subnet4Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnet4Name'))]",
+        "ClassA": {
+            "ap": "10.255.255.0/24",
+            "sn1as": "10.255.255.0/26",
+			"sn1gw": "10.255.255.1",
+            "sn2as": "10.255.255.64/26",
+			"sn2gw": "10.255.255.65",
+            "sn3as": "10.255.255.128/26",
+			"sn3gw": "10.255.255.129",
+            "sn4as": "10.255.255.192/26",
+			"sn4gw": "10.255.255.193"
+        },
+        "ClassB": {
+            "ap": "172.16.31.0/24",
+            "sn1as": "172.16.31.0/26",
+			"sn1gw": "172.16.31.1",
+            "sn2as": "172.16.31.64/26",
+			"sn2gw": "172.16.31.65",
+            "sn3as": "172.16.31.128/26",
+			"sn3gw": "172.16.31.129",
+            "sn4as": "172.16.31.192/26",
+			"sn4gw": "172.16.31.193"
+        },
+        "ClassC": {
+            "ap": "192.168.255.0/24",
+            "sn1as": "192.168.255.0/26",
+			"sn1gw": "192.168.255.1",
+            "sn2as": "192.168.255.64/26",
+			"sn2gw": "192.168.255.65",
+            "sn3as": "192.168.255.128/26",
+			"sn3gw": "192.168.255.129",
+            "sn4as": "192.168.255.192/26",
+			"sn4gw": "192.168.255.193"
+        },
+		"PublicLoadBalancerName": "[concat(parameters('BaseDeploymentName'),'-dmz-public-lb')]",
+		"PublicLoadBalancerFEName": "[concat(parameters('BaseDeploymentName'),'-dmz-public-lb-fe')]",
+		"PublicLoadBalancerBEPName": "[concat(parameters('BaseDeploymentName'),'-dmz-public-lb-bep')]",
+		"PublicLoadBalancerHPName": "[concat(parameters('BaseDeploymentName'),'-dmz-public-lb-webgui-hp')]",
+		"PublicLoadBalancerRuleName": "[concat(parameters('BaseDeploymentName'),'-dmz-public-lb-https-rule')]",
+		"PrivateLoadBalancerName": "[concat(parameters('BaseDeploymentName'),'-dmz-private-lb')]",
+		"PrivateLoadBalancerFEName": "[concat(parameters('BaseDeploymentName'),'-dmz-private-lb-fe')]",
+		"PrivateLoadBalancerBEPName": "[concat(parameters('BaseDeploymentName'),'-dmz-private-lb-bep')]",
+		"PrivateLoadBalancerHPName": "[concat(parameters('BaseDeploymentName'),'-dmz-private-lb-hp')]",
+		"PrivateLoadBalancerRuleName": "[concat(parameters('BaseDeploymentName'),'-dmz-private-lb-ha-rule')]",
+		"PublicIPDNS": "[concat(parameters('BaseDeploymentName'),'-dmz-public-lb-fe-pip')]",
+		"PublicIPId": "[resourceId(concat('Microsoft.Network/','publicIPAddresses'),variables('PublicIPDNS'))]",
+		"PublicLBID": "[resourceId('Microsoft.Network/loadBalancers/',variables('PublicLoadBalancerName'))]",
+		"PublicLBFrontendID": "[concat(variables('PublicLBID'),'/frontendIPConfigurations/',variables('PublicLoadBalancerFEName'))]",
+		"PublicLBBackendID": "[concat(variables('PublicLBID'),'/backendAddressPools/',variables('PublicLoadBalancerBEPName'))]",
+		"PublicLBProbeID": "[concat(variables('PublicLBID'),'/probes/',variables('PublicLoadBalancerHPName'))]",
+		"PrivateLBID": "[resourceId('Microsoft.Network/loadBalancers/',variables('PrivateLoadBalancerName'))]",
+		"PrivateLBFrontendID": "[concat(variables('PrivateLBID'),'/frontendIPConfigurations/',variables('PrivateLoadBalancerFEName'))]",
+		"PrivateLBBackendID": "[concat(variables('PrivateLBID'),'/backendAddressPools/',variables('PrivateLoadBalancerBEPName'))]",
+		"PrivateLBProbeID": "[concat(variables('PrivateLBID'),'/probes/',variables('PrivateLoadBalancerHPName'))]",
+		"networkSecurityGroupId": "[resourceId('Microsoft.Compute/networkSecurityGroups/',variables('networkSecurityGroupName'))]",
+		"availabilitySetId": "[resourceId('Microsoft.Compute/availabilitySets/',variables('availabilitySetName'))]",
+		"imagePublisher": "sophos",
+        "imageOffer": "sophos-xg",
+        "adminUsername": "azadmin",
+        "sshKeyPath": "[concat('/home/',variables('adminUsername'),'/.ssh/authorized_keys')]",
+		"imageSku": "byol",
+		"vmSize": "Standard_D2_v2",
+		"AccountName": "[concat(parameters('BaseDeploymentName'),'-azAutomation')]",
+		"psmodule": {
+		"name": "Posh-SSH",
+			"url": "https://devopsgallerystorage.blob.core.windows.net/packages/posh-ssh.2.0.2.nupkg"
+			},
+		"runbook": {
+			"name": "XG-LB-routing",
+			"version": "1.0.0.0",
+			"description": "This runbook configures routing for the Azure Load Balancer Standard health check on the XG nodes in the Availability Set",
+			"type": "PowerShell",
+			"scriptUri": "https://raw.githubusercontent.com/mcs1970/thincit/sophos-xg-aa/xg-aa.ps1"
+			},
+		"job": {
+			"name": "Run_XG-LB-routing"
+			},
+		"lanPrefix": "[variables(parameters('SubnetClass')).sn2as]",
+		"wanPreFix": "[variables(parameters('SubnetClass')).sn1as]",
+		"lanNetwork": "[substring(variables('lanPrefix'),0,sub(length(variables('lanPrefix')), 4))]",
+		"wanNetwork": "[substring(variables('wanPrefix'),0,sub(length(variables('wanPrefix')), 4))]",
+		"peering1Name": "[concat(variables('virtualNetworkName'),'-TO-',parameters('vNetToPeerWith'))]",
+		"peering2Name": "[concat(parameters('vNetToPeerWith'),'-TO-',variables('virtualNetworkName'))]"
+    },
+    "resources": [
+        {
+			"name": "[variables('availabilitySetName')]",
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2018-10-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "platformFaultDomainCount": 3
+            },
+			"sku": {
+					"name": "aligned"
+					}
+		},
+         {
+			"name": "[concat(variables('storageAccountName'))]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+
+            },
+            "sku": {
+                "name": "[variables('storageAccountType')]"
+            },
+            "kind": "Storage"
+        },
+        {
+            "name": "[variables('networkSecurityGroupName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "[variables('nsgRule1Name')]",
+                        "properties": {
+                            "protocol": "tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRanges": ["4444","6514"],
+                            "sourceAddressPrefixes": ["75.137.124.110","52.167.6.155","169.130.39.110","50.204.227.75","38.140.18.250","100.7.129.50","66.168.122.9","72.87.86.163","10.81.234.0/24","10.81.235.0/24","74.97.41.140","100.7.45.139"],
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 101,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "[variables('nsgRule2Name')]",
+                        "properties": {
+                            "protocol": "tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 102,
+                            "direction": "Inbound"
+                        }
+                    },
+	              {
+                        "name": "[variables('nsgRule3Name')]",
+                        "properties": {
+                            "protocol": "tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 103,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat(variables('vmBaseName'),copyindex(),'-mgmt-nic-pip')]",
+            "apiVersion": "2018-08-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "location": "[resourceGroup().location]",
+			"copy":{
+				"count": "[parameters('InstanceCount')]",
+				"name": "PublicMgmtIPLoop"
+			},
+			"sku": { "name": "Standard"},
+            "properties": {
+                "publicIPAllocationMethod": "static",
+                "dnsSettings": {"domainNameLabel": "[concat(variables('vmBaseName'),copyindex(),'-mgmt-nic-pip')]"}
+            }
+        },
+        {
+            "name": "[variables('PublicIPDNS')]",
+            "apiVersion": "2018-08-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "location": "[resourceGroup().location]",
+			"sku": { "name": "Standard"},
+            "properties": {
+                "publicIPAllocationMethod": "static",
+                "dnsSettings": {"domainNameLabel": "[variables('PublicIPDNS')]"}
+            }
+        },			
+        {
+            "name": "[variables('virtualNetworkName')]",
+            "apiVersion": "2016-06-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": ["[variables(parameters('SubnetClass')).ap]"]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('Subnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables(parameters('SubnetClass')).sn1as]"
+                        }
+                    },
+                    {
+                        "name": "[variables('Subnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables(parameters('SubnetClass')).sn2as]"
+                        }
+                    },
+                    {
+                        "name": "[variables('Subnet3Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables(parameters('SubnetClass')).sn3as]"
+                        }
+                    },
+                    {
+                        "name": "[variables('Subnet4Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables(parameters('SubnetClass')).sn4as]"
+                        }
+                    }
+                ]
+            },
+            "resources": [
+               {
+                   "apiVersion": "2016-06-01",
+                   "type": "virtualNetworkPeerings",
+                   "name": "[variables('peering1Name')]",
+                   "location": "[resourceGroup().location]",
+                   "dependsOn": [
+                       "[concat('Microsoft.Network/virtualNetworks/', variables('VirtualNetworkName'))]"
+                   ],
+                   "properties": {
+                       "allowVirtualNetworkAccess": "true",
+                       "allowForwardedTraffic": "true",
+                       "allowGatewayTransit": "true",
+                       "useRemoteGateways": "false",
+                       "remoteVirtualNetwork": {
+                           "id": "[resourceId(parameters('RemoteVNetResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('vNetToPeerWith'))]"
+                       }
+                   }
+               }  
+            ]		
+        },	
+        {
+            "name": "[variables('PublicLoadBalancerName')]",
+            "apiVersion": "2018-11-01",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+			"sku": { "name": "Standard"},
+            "dependsOn": [
+				"[variables('PublicIPDNS')]"
+				],
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "[variables('PublicLoadBalancerFEName')]",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('publicIpId')]"
+                            }
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "[variables('PublicLoadBalancerBEPName')]"
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "HTTPS",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[variables('PublicLBFrontendID')]"
+                            },
+                            "frontendPort": 443,
+                            "backendPort": 443,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "loadDistribution": "SourceIP",
+                            "backendAddressPool": {
+                                "id": "[variables('PublicLBBackendID')]"
+                            },
+                            "probe": {
+                                "id": "[variables('PublicLBProbeID')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "[variables('PublicLoadBalancerHPName')]",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 4444,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ]
+            }
+        },
+       {
+            "name": "[concat(variables('vmBaseName'), copyIndex(), '-public-nic')]",
+            "apiVersion": "2018-08-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "WANInterfaceLoop",
+                "count": "[parameters('instanceCount')]"
+            },
+            "dependsOn": [
+       	    "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+			"[variables('PublicLoadBalancerName')]",
+			"[variables('networkSecurityGroupName')]",
+			"[resourceId('Microsoft.Network/publicIPAddresses/', concat(variables('vmBaseName'), copyindex(), '-mgmt-nic-pip'))]"
+    		  ],
+            "properties": {
+                "networkSecurityGroup": {
+                    "id": "[variables('networkSecurityGroupId')]"
+                },
+                "ipConfigurations": [
+                    {
+                     "name": "[concat(variables('vmBaseName'), copyIndex(), '-mgmt-nic-ipconfig')]",
+                     "properties": {
+						"publicIPAddress": {
+							"id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat(variables('vmBaseName'), copyindex(), '-mgmt-nic-pip'))]"
+									},
+						"privateIPAllocationMethod": "dynamic",
+                            "subnet": {
+                                "id": "[variables('subnet1Ref')]"
+                            },
+						"primary": true	
+                        }
+                    },			
+                    {
+                     "name": "[concat(variables('vmBaseName'), copyIndex(), '-public-nic-ipconfig')]",
+                     "properties": {
+						"privateIPAllocationMethod": "dynamic",
+                            "subnet": {
+                                "id": "[variables('subnet1Ref')]"
+                            },
+							"loadBalancerBackendAddressPools": [
+                            {
+                                    "id": "[variables('PublicLBBackendID')]"
+                            }
+                            ]						
+                        
+                        }
+                    }
+                ],
+				"enableIPForwarding": true
+ 
+            }
+        },
+
+		
+       {
+            "name": "[variables('PrivateLoadBalancerName')]",
+			"apiVersion": "2017-08-01",
+            "type": "Microsoft.Network/loadBalancers",
+            "dependsOn": [
+       	    "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+						],
+            "location": "[resourceGroup().location]",
+			"sku":
+            {
+                "name": "Standard"
+            },
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "[variables('PrivateLoadBalancerFEName')]",
+                        "properties": {
+                            "subnet": {
+							"id": "[variables('subnet2Ref')]"
+							},
+							"privateIPAllocationMethod": "dynamic"
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "[variables('PrivateLoadBalancerBEPName')]"
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "AnyTCPUDP",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[variables('PrivateLBFrontendID')]"
+                            },
+                            "frontendPort": 0,
+                            "backendPort": 0,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "All",
+                            "loadDistribution": "SourceIP",
+                            "backendAddressPool": {
+                                "id": "[variables('PrivateLBBackendID')]"
+                            },
+                            "probe": {
+                                "id": "[variables('PrivateLBProbeID')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "[variables('PrivateLoadBalancerHPName')]",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 3128,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ]
+            }
+        },
+		
+		
+      {
+            "name": "[concat(variables('vmBaseName'), copyIndex(), '-private-nic')]",
+            "apiVersion": "2018-08-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "PRIVATEInterfaceLoop",
+                "count": "[parameters('instanceCount')]"
+            },
+            "dependsOn": [
+       	    "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+			"[variables('PrivateLoadBalancerName')]",
+			"[variables('networkSecurityGroupName')]"
+    		  ],
+            "properties": {
+                "networkSecurityGroup": {
+                    "id": "[variables('networkSecurityGroupId')]"
+                },
+                "ipConfigurations": [
+                    {
+                     "name": "[concat(variables('vmBaseName'), copyIndex(), '-private-nic-ipconfig')]",
+                     "properties": {
+						"privateIPAllocationMethod": "dynamic",
+                            "subnet": {
+                                "id": "[variables('subnet2Ref')]"
+                            },
+							"loadBalancerBackendAddressPools": [
+                            {
+                                    "id": "[variables('PrivateLBBackendID')]"
+                            }
+                            ]						
+                        
+                        }
+                    }
+                ],
+				"enableIPForwarding": true
+            }
+        },
+
+        {
+            "apiVersion": "2018-10-01",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vmBaseName'),copyindex(),'-vm')]",
+            "copy": {
+                "name": "VMLoop",
+                "count": "[parameters('instanceCount')]"
+            },
+            "dependsOn": [
+                "[concat(variables('vmBaseName'), copyIndex(), '-public-nic')]",
+				"[concat(variables('vmBaseName'), copyIndex(), '-private-nic')]",
+                "[concat(variables('storageAccountName'))]",
+                "[variables('availabilitySetName')]"
+            ],
+            "plan": {
+                "publisher": "[variables('imagePublisher')]",
+                "product": "[variables('imageOffer')]",
+                "name": "[variables('imageSku')]"
+            },
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId(ResourceGroup().Name, 'Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "[variables('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[concat(variables('vmBaseName'),copyindex(),'-vm')]",
+                    "adminUsername": "[variables('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "[variables('imageSku')]",
+                        "version": "latest"
+                    },
+                    "dataDisks": [
+                        {
+                        "name": "[concat(variables('vmBaseName'),copyindex(),'-dataDisk')]",
+                        "lun": 0,
+                        "createOption": "FromImage",
+						"managedDisk": {
+							"storageAccountType": "[variables('storageAccountType')]"
+									}
+                         }
+                    ],
+                    "osDisk": {
+                        "name": "[concat(variables('vmBaseName'),copyindex(),'-osDisk')]",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage",
+						"managedDisk": {
+							"storageAccountType": "[variables('storageAccountType')]"
+									}
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+						{
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmBaseName'), copyindex(), '-public-nic'))]",
+                            "properties": {
+                                "primary": true
+                            }
+                        },
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmBaseName'), copyindex(), '-private-nic'))]",
+                            "properties": {
+                                "primary": false
+                            }
+                        }
+                    ]
+                },
+				"diagnosticsProfile": {
+				"bootDiagnostics": {
+					"enabled": true,
+					"storageUri": "[concat('http://', variables('StorageAccountName'), '.blob.core.windows.net')]"
+					}
+					}
+            }
+        },
+    {
+      "name": "[variables('accountName')]",
+      "type": "Microsoft.Automation/automationAccounts",
+      "apiVersion": "2015-10-31",
+      "location": "EastUS2",
+      "properties": {
+        "comment": "Resource defined structure",
+        "sku": {
+          "name": "Free"
+        }
+      },
+      "resources": [
+        {
+		  "name": "[concat(variables('accountName'), '/', variables('psmodule').name)]",
+		  "type": "Microsoft.Automation/automationAccounts/modules",
+		  "apiVersion": "2015-10-31",
+		  "tags": {},
+		  "dependsOn": [
+			  "[concat('Microsoft.Automation/automationAccounts/', variables('accountName'))]"
+		  ],
+		  "properties": {
+			  "contentLink": {
+			  "uri": "[variables('psmodule').url]"
+			  }	
+		  }
+		},
+		{
+		  "name": "[concat(variables('accountName'), '/', variables('runbook').name)]",
+		  "type": "Microsoft.Automation/automationAccounts/runbooks",
+		  "apiVersion": "2015-10-31",
+		  "location": "EastUS2",
+		  "dependsOn": [
+			  "[resourceId('Microsoft.Automation/automationAccounts', variables('accountName'))]"
+		  ],
+		  "tags": {},
+		  "properties": {
+			  "runbookType": "[variables('runbook').type]",
+			  "logProgress": "false",
+			  "logVerbose": "false",
+			  "description": "[variables('runbook').description]",
+			  "publishContentLink": {
+				"uri": "[variables('runbook').scriptUri]",
+				"version": "[variables('runbook').version]"
+				}
+		  }
+		}
+	  ]
+    },
+		{
+			"name": "[concat(variables('AccountName'),'/RunbookJob',copyIndex())]",
+			"type": "Microsoft.Automation/automationAccounts/jobs",
+			"apiVersion": "2017-05-15-preview",
+			"copy": {
+                "name": "JobLoop",
+                "count": "[parameters('InstanceCount')]"
+            },
+			"dependsOn": [
+				"[concat('Microsoft.Automation/automationAccounts/', variables('accountName'))]",
+				"[concat(variables('vmBaseName'),copyindex(),'-vm')]"
+			],
+			"properties": {
+				"runbook": {
+				"name": "[variables('runbook').name]"
+				},
+				"parameters": {
+					"password": "[parameters('adminPassword')]",
+					"portagw": "[variables(parameters('SubnetClass')).sn2gw]",
+					"portbgw": "[variables(parameters('SubnetClass')).sn1gw]",
+                    "hostname": "[concat(variables('vmBaseName'),copyindex(),'-mgmt-nic-pip.', resourceGroup().location, '.cloudapp.azure.com')]",
+					"sshport": "22",
+					"fwaliasIP": "[reference(variables(concat('fw',copyindex(),'aliasIP'))).IpConfigurations[1].properties.PrivateIpAddress]",
+					"LocalAS": "[variables(parameters('SubnetClass')).ap]",
+					"RemoteAS": "[parameters('RemoteVnetAddressSpace')]"
+				}
+			}
+		}
+    ],
+ "outputs": 
+	{
+        "PublicIP": {
+          "type": "string",
+          "value": "[reference(variables('PublicIPDNS')).ipaddress]"
+			},
+       "PublicIPDNS": {
+          "type": "string",
+          "value": "[reference(variables('PublicIPDNS')).dnsSettings.fqdn]"
+			},		
+        "Firewall-0-Management-URL": {
+          "type": "string",
+          "value": "[concat('https://',reference(variables('fw0mgmtDNS')).dnsSettings.fqdn, ':4444')]"
+			},
+        "Firewall-1-Management-URL": {
+          "type": "string",
+          "value": "[concat('https://',reference(variables('fw1mgmtDNS')).dnsSettings.fqdn,':4444')]"
+			},
+		"Firewall-0-Alias-IP": {
+          "type": "string",
+          "value": "[reference(variables('fw0aliasIP')).IpConfigurations[1].properties.PrivateIpAddress]"
+			},
+		"Firewall-1-Alias-IP": {
+          "type": "string",
+          "value": "[reference(variables('fw1aliasIP')).IpConfigurations[1].properties.PrivateIpAddress]"
+			}
+  
+  			
+	}
+}
