@@ -3,6 +3,8 @@ Deployment template to deploy Sophos XG Active/Active firewall to Azure
 
 Developed by THIncIT
 
+***
+
 Deploying
 =========
 
@@ -48,6 +50,8 @@ Please note: The `adminPassword` has to be minimum 8 characters, **containing at
 
 6) Document publicIPDNS, firewall-0-Management-URL, firewall-1-Management-URL, firewall-0-Alias-IP, and firewall-1-Alias-IP
 
+Next Steps: Add alias IP's to firewalls, complete Network Peering setup on remote virtual network
+
 ***
 
 Connect to the VM instances
@@ -56,6 +60,24 @@ Connect to the VM instances
 [https://firewall-0-Management-URL:4444](https://firewall-0-Management-URL:4444)
 
 [https://firewall-1-Management-URL:4444](https://firewall-1-Management-URL:4444)
+
+***
+
+Azure Resources Created
+=======================
+
+Availability Set - `clientID`-dmz-as
+Automation Account - `clientID`-azAutomation
+Storage Account - `clientID`dmzsa<unique string>
+DMZ Public IP Address - `clientID`-dmz-public-lb-fe-pip
+Management Public IP Addresses - `clientID`-fw0-mgmt-nic-pip, `clientID`-fw1-mgmt-nic-pip
+Virtual Network - `clientID`-dmz-vnet
+Network Security Group - `clientID`-dmz-nsg
+Standard Public Load Balancer - `clientID`-dmz-public-lb
+Standard Internal Load Balancer - `clientID`-dmz-private-lb
+Network Peering - `clientID`-dmz-vnet-TO-(existingvnet)
+Virtual Machines - `clientID`-fm0-vm, `clientID`-fw1-vm
+RunBooks - `clientID`-azAutomation/RunbookJob0, `clientID`-azAutomation/RunbookJob1
 
 ***
 
