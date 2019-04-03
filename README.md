@@ -42,11 +42,11 @@ Please reach out to your sales or channel representative to learn more about the
 	
 	h. Enter number of firewall instances to create. Currently this is locked to 2.
 
-3) Agree to the Terms and Conditions then click Purchase.
+3) Agree to the **Terms and Conditions** then click Purchase.
 
 4) The deployment will start. Wait until the deployment goes to state "Succeeded".
 
-5) In the Microsoft.Template - Overview blade click Outputs.
+5) In the **Microsoft.Template - Overview** blade click Outputs.
 
 6) Document deployment output values
 
