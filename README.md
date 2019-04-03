@@ -48,7 +48,7 @@ Please reach out to your sales or channel representative to learn more about the
 
 5) In the **Microsoft.Template - Overview** blade click **Outputs.**
 
-6) Document deployment output values.
+6) Document deployment output values:
 
 		output 1:publicIPDNS
 		output 2:firewall-0-Management-URL
