@@ -77,7 +77,7 @@ Azure Resources Created
 
  Availability Set: `clientID-dmz-as`
 
- Automation Account: `clientIDazAutomation`
+ Automation Account: `clientID-azAutomation`
 
  Storage Account: `clientIDdmzsa(unique string)`
 
