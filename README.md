@@ -5,8 +5,10 @@ Deploying
 =========
 
 Notes: 
+
 -Configuration sync between the XG nodes can be done by using SFM, Sophos Central or SCFM. 
 Please reach out to your sales or channel representative to learn more about these Sophos products.
+
 -An existing virtual network must exist within the tenant you are deploying to.
 
 1) Press the deployment button and enter your Azure credentials when prompted.
