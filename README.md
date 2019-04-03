@@ -72,7 +72,7 @@ Availability Set: `clientID`-dmz-as
 
 Automation Account: `clientID`-azAutomation
 
-Storage Account: `clientID`dmzsa<unique string>
+Storage Account: `clientID`dmzsa(unique string)
 
 DMZ Public IP Address: `clientID`-dmz-public-lb-fe-pip
 
