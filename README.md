@@ -66,7 +66,7 @@ Connect to the VM instances
 Azure Resources Created
 =======================
 
-**Resource Type               Resource Name**
+**Resource Type / Resource Name**
 
 Availability Set: `clientID`-dmz-as
 
