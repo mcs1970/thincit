@@ -50,11 +50,11 @@ Please reach out to your sales or channel representative to learn more about the
 
 6) Document deployment output values.
 
-		publicIPDNS
-		firewall-0-Management-URL
-		firewall-1-Management-URL
-		firewall-0-Alias-IP
-		firewall-1-Alias-IP
+		output 1: publicIPDNS
+		output 2:firewall-0-Management-URL
+		output 3:firewall-1-Management-URL
+		output 4:firewall-0-Alias-IP
+		output 5:firewall-1-Alias-IP
 		
 
 Next Steps: Add alias IP's to firewalls, complete Network Peering setup on remote virtual network, update Network Security Groups to apply to subnets instead of network interface cards, move public load balancer SSH port from rule 103 to rule 101.
