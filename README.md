@@ -75,29 +75,29 @@ Azure Resources Created
 
 **Resource Type / Resource Name**
 
- Availability Set: `clientID`-dmz-as
+ Availability Set: `clientID-dmz-as`
 
- Automation Account: `clientID`-azAutomation
+ Automation Account: `clientIDazAutomation`
 
- Storage Account: `clientID`dmzsa(unique string)
+ Storage Account: `clientIDdmzsa(unique string)`
 
- DMZ Public IP Address: `clientID`-dmz-public-lb-fe-pip
+ DMZ Public IP Address: `clientID-dmz-public-lb-fe-pip`
 
- Management Public IP Addresses: `clientID`-fw0-mgmt-nic-pip, `clientID`-fw1-mgmt-nic-pip
+ Management Public IP Addresses: `clientID-fw0-mgmt-nic-pip`, `clientID-fw1-mgmt-nic-pip`
 
- Virtual Network: `clientID`-dmz-vnet
+ Virtual Network: `clientID-dmz-vnet`
 
- Network Security Group: `clientID`-dmz-nsg
+ Network Security Group: `clientID-dmz-nsg`
 
- Standard Public Load Balancer: `clientID`-dmz-public-lb
+ Standard Public Load Balancer: `clientID-dmz-public-lb`
 
- Standard Internal Load Balancer: `clientID`-dmz-private-lb
+ Standard Internal Load Balancer: `clientID-dmz-private-lb`
 
- Network Peering: `clientID`-dmz-vnet-TO-(existingvnet) 
+ Network Peering: `clientID-dmz-vnet-TO-(existingvnet)`
  
- Virtual Machines: `clientID`-fm0-vm, `clientID`-fw1-vm 
+ Virtual Machines: `clientID`-fm0-vm, `clientID-fw1-vm`
  
- RunBooks: `clientID`-azAutomation/RunbookJob0, `clientID`-azAutomation/RunbookJob1 
+ RunBooks: `clientID-azAutomation/RunbookJob0`, `clientID-azAutomation/RunbookJob1`
 
 ***
 
