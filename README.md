@@ -66,29 +66,31 @@ Connect to the VM instances
 Azure Resources Created
 =======================
 
-Availability Set - `clientID`-dmz-as
+**Resource Type               Resource Name**
 
-Automation Account - `clientID`-azAutomation
+Availability Set: `clientID`-dmz-as
 
-Storage Account - `clientID`dmzsa<unique string>
+Automation Account: `clientID`-azAutomation
 
-DMZ Public IP Address - `clientID`-dmz-public-lb-fe-pip
+Storage Account: `clientID`dmzsa<unique string>
 
-Management Public IP Addresses - `clientID`-fw0-mgmt-nic-pip, `clientID`-fw1-mgmt-nic-pip
+DMZ Public IP Address: `clientID`-dmz-public-lb-fe-pip
 
-Virtual Network - `clientID`-dmz-vnet
+Management Public IP Addresses: `clientID`-fw0-mgmt-nic-pip, `clientID`-fw1-mgmt-nic-pip
 
-Network Security Group - `clientID`-dmz-nsg
+Virtual Network: `clientID`-dmz-vnet
 
-Standard Public Load Balancer - `clientID`-dmz-public-lb
+Network Security Group: `clientID`-dmz-nsg
 
-Standard Internal Load Balancer - `clientID`-dmz-private-lb
+Standard Public Load Balancer: `clientID`-dmz-public-lb
 
-Network Peering - `clientID`-dmz-vnet-TO-(existingvnet)
+Standard Internal Load Balancer: `clientID`-dmz-private-lb
 
-Virtual Machines - `clientID`-fm0-vm, `clientID`-fw1-vm
+Network Peering: `clientID`-dmz-vnet-TO-(existingvnet)
 
-RunBooks - `clientID`-azAutomation/RunbookJob0, `clientID`-azAutomation/RunbookJob1
+Virtual Machines: `clientID`-fm0-vm, `clientID`-fw1-vm
+
+RunBooks: `clientID`-azAutomation/RunbookJob0, `clientID`-azAutomation/RunbookJob1
 
 ***
 
