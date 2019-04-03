@@ -42,11 +42,11 @@ Please reach out to your sales or channel representative to learn more about the
 	
 	h. Enter number of firewall instances to create. Currently this is locked to 2.
 
-3) Agree to the **Terms and Conditions** then click Purchase.
+3) Agree to the **Terms and Conditions** then click **Purchase.**
 
 4) The deployment will start. Wait until the deployment goes to state "Succeeded".
 
-5) In the **Microsoft.Template - Overview** blade click Outputs.
+5) In the **Microsoft.Template - Overview** blade click **Outputs.**
 
 6) Document deployment output values.
 
@@ -57,7 +57,7 @@ Please reach out to your sales or channel representative to learn more about the
 		firewall-1-Alias-IP
 		
 
-Next Steps: Add alias IP's to firewalls, complete Network Peering setup on remote virtual network.
+Next Steps: Add alias IP's to firewalls, complete Network Peering setup on remote virtual network, update Network Security Groups to apply to subnets instead of network interface cards, move public load balancer SSH port from rule 103 to rule 101.
 
 ***
 
