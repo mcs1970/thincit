@@ -5,6 +5,7 @@ Deploying
 =========
 
 Notes: 
+
 -Configuration sync between the XG nodes can be done by using SFM, Sophos Central or SCFM. 
 Please reach out to your sales or channel representative to learn more about these Sophos products.
 
@@ -51,6 +52,7 @@ Connect to the VM instances
 ==========================
 
 [https://firewall-1-Management-URL](https://firewall-1-Management-URL)
+
 [https://firewall-2-Management-URL](https://firewall-2-Management-URL)
 
 ***
