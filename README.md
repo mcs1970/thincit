@@ -95,7 +95,7 @@ Azure Resources Created
 
  Network Peering: `clientID-dmz-vnet-TO-(existingvnet)`
  
- Virtual Machines: `clientID`-fm0-vm, `clientID-fw1-vm`
+ Virtual Machines: `clientID-fm0-vm`, `clientID-fw1-vm`
  
  RunBooks: `clientID-azAutomation/RunbookJob0`, `clientID-azAutomation/RunbookJob1`
 
