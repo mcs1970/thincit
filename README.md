@@ -56,13 +56,9 @@ Please note: The `adminPassword` has to be minimum 8 characters, **containing at
 6) Document deployment output values
 
 		publicIPDNS
-		
 		firewall-0-Management-URL
-		
 		firewall-1-Management-URL
-		
 		firewall-0-Alias-IP
-		
 		firewall-1-Alias-IP
 		
 
