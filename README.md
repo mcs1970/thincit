@@ -4,7 +4,7 @@ Deployment template to deploy Sophos XG Active/Active firewall to Azure
 Deploying
 =========
 
-Notes: 
+Notes:
 
 -Configuration sync between the XG nodes can be done by using SFM, Sophos Central or SCFM. 
 Please reach out to your sales or channel representative to learn more about these Sophos products.
@@ -38,7 +38,7 @@ Please reach out to your sales or channel representative to learn more about the
 
 Please note: The `adminPassword` has to be minimum 8 characters, **containing at least a lowercase letter, an uppercase letter, a number, and a special character.**
 
-3) Agree to the Terms and Conditions, then click Purchase.
+3) Agree to the Terms and Conditions then click Purchase.
 
 4) The deployment will start. Wait until the deployment goes to state "Succeeded".
 
