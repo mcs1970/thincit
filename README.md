@@ -55,7 +55,18 @@ Please note: The `adminPassword` has to be minimum 8 characters, **containing at
 
 5) In the Microsoft.Template - Overview blade click Outputs.
 
-6) Document publicIPDNS, firewall-0-Management-URL, firewall-1-Management-URL, firewall-0-Alias-IP, and firewall-1-Alias-IP
+6) Document deployment output values
+
+		publicIPDNS
+		
+		firewall-0-Management-URL
+		
+		firewall-1-Management-URL
+		
+		firewall-0-Alias-IP
+		
+		firewall-1-Alias-IP
+		
 
 Next Steps: Add alias IP's to firewalls, complete Network Peering setup on remote virtual network
 
