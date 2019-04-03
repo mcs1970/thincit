@@ -34,8 +34,7 @@ Please reach out to your sales or channel representative to learn more about the
 	
 **If invalid parameters are passed, the deployment will fail.**
 
-Please note:
-* The `adminPassword` has to be minimum 8 characters, **containing at least a lowercase letter, an uppercase letter, a number, and a special character.**
+Please note: The `adminPassword` has to be minimum 8 characters, **containing at least a lowercase letter, an uppercase letter, a number, and a special character.**
 
 3) Agree to the Terms and Conditions, then click Purchase.
 
