@@ -32,7 +32,7 @@ Please reach out to your sales or channel representative to learn more about the
 	
 	c. Enter existing virtual network name to create network peer with.
 	
-	d. Enter existing virtual network address space in CIDR format. (ex: 10.0.0.1/16)
+	d. Enter existing virtual network address space in CIDR format. (ex: 10.0.0.0/16)
 	
 	e. Enter existing virtual network resource group name.
 	
