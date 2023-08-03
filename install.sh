@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # install apache
-apt-get -y update
-apt-get -y install apache2
+sudo apt -y update
+sudo apt -y install apache2
 
 # enable apache Full config
-ufw allow 'Apache Secure'
+sudo ufw allow 'Apache Secure'
 
